@@ -10,10 +10,10 @@ namespace effort_controllers {
     bool JointVelocityController::init(hardware_interface::EffortJointInterface *robot, ros::NodeHandle &n) {
         control_toolbox::Pid pid;
         pid.initPid(6.0, 1.0, 2.0, 0.3, -0.3);
-        std::string front_left_wheel_joint, back_left_wheel_joint, front_right_wheel_joint, back_right_wheel_joint;
+        std::string  front_left_wheel_joint,back_left_wheel_joint, front_right_wheel_joint, back_right_wheel_joint;
         if (!n.getParam("joint", front_left_wheel_joint)) {
             ROS_ERROR("No joint given (namespace: %s)", n.getNamespace().c_str());
-            return false;
+           return false;
         }
         if (!n.getParam("joint", back_left_wheel_joint)) {
             ROS_ERROR("No joint given (namespace: %s)", n.getNamespace().c_str());

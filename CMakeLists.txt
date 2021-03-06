@@ -19,7 +19,16 @@ find_package(catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
         urdf
+        tf          #Odon
+        nav_msgs    #Odon
+        rospy       #Odon
+
+        message_generation
+
         )
+
+add_message_files(FILES odom_pub.msg)
+generate_messages(DEPENDENCIES std_msgs)
 
 # Declare catkin package
 catkin_package(
@@ -32,10 +41,14 @@ catkin_package(
         realtime_tools
         std_msgs
         urdf
+
+        message_runtime  # must be put here
+
         LIBRARIES
         ${PROJECT_NAME}
         INCLUDE_DIRS
         include
+
 )
 
 
@@ -45,13 +58,18 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
+
 add_library(${PROJECT_NAME}
         src/joint_velocity_controller.cpp
+        src/odom_tf_pub.cpp  #add_library后这个文件才能正常使用
+
         )
 
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 
+add_executable (odom_tf_pub src/odom_tf_pub.cpp)
+target_link_libraries (odom_tf_pub ${catkin_LIBRARIES})
+add_dependencies(odom_tf_pub ${PROJECT_NAME}_generate_messages_cpp)
 
 
 

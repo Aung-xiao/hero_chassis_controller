@@ -7,6 +7,7 @@
 #include <realtime_tools/realtime_publisher.h>
 #include <ros/node_handle.h>
 #include <std_msgs/Float64.h>
+#include <ros/ros.h>
 
 namespace effort_controllers
 {
@@ -96,11 +97,12 @@ namespace effort_controllers
                         control_msgs::JointControllerState> > controller_state_publisher_ ;
 
         ros::Subscriber sub_command_;
-
         /**
          * \brief Callback from /command subscriber for setpoint
          */
         void setCommandCB(const std_msgs::Float64ConstPtr& msg);
+
     };
 
 } // namespace
+
