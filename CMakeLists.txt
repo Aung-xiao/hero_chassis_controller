@@ -24,6 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
         rospy       #Odon
 
         message_generation
+        geometry_msgs
 
         )
 
@@ -61,8 +62,8 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
         src/joint_velocity_controller.cpp
-        src/odom_tf_pub.cpp  #add_library后这个文件才能正常使用
-
+        #src/odom_tf_pub.cpp   //if you want to use odom_tf_pub,you should remove the #
+        src/cmd_vel_publisher.cpp
         )
 
 
@@ -70,6 +71,13 @@ add_library(${PROJECT_NAME}
 add_executable (odom_tf_pub src/odom_tf_pub.cpp)
 target_link_libraries (odom_tf_pub ${catkin_LIBRARIES})
 add_dependencies(odom_tf_pub ${PROJECT_NAME}_generate_messages_cpp)
+
+
+
+add_executable (cmd_vel_publisher src/cmd_vel_publisher.cpp)
+target_link_libraries (cmd_vel_publisher ${catkin_LIBRARIES})
+add_dependencies(cmd_vel_publisher ${PROJECT_NAME}_generate_messages_cpp)
+
 
 
 
