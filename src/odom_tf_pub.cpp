@@ -6,8 +6,8 @@
 #include <ros/console.h>
 #include <unistd.h>
 
-
-
+#include <dynamic_tutorial/tutorialConfig.h>
+#include <dynamic_reconfigure/client.h>
 
 double x = 0.0;
 double y = 0.0;
@@ -22,6 +22,9 @@ double flv=0;
 double frv=0;
 double blv=0;
 double brv=0;
+
+double wheel_track=0.5;
+double wheel_base=0.475;
 
 
 void fl_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
@@ -40,13 +43,18 @@ void br_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
 {
     brv= msg->data;
 }
-void messageCallback(const hero_chassis_controller::odom_pub::ConstPtr& msg) //获取上篇文章串口功能包发来的数据
+void messageCallback(const hero_chassis_controller::odom_pub::ConstPtr& msg)
 {
-    vx = double(msg->front_left_velocity)/1000;
-    vy = double(msg->back_left_velocity)/1000;
-    vth =double(msg->front_right_velocity)/1000;
-    ROS_INFO("Vx = [%f] Vth = [%f]", vx,  vth);
+    vx = wheel_track;
+    vy = double(msg->back_left_velocity);
+    vth =double(msg->front_right_velocity);
 }
+void dynCallBack(const dynamic_tutorial::tutorialConfig &config)
+{
+    wheel_base=config.wheel_base;
+    wheel_track=config.wheel_track;
+    ROS_INFO("vx=%f",config.wheel_track);
+};
 
 int main(int argc, char **argv)
 {
@@ -60,13 +68,23 @@ int main(int argc, char **argv)
     ros::Publisher  odom_param_pub = n.advertise<hero_chassis_controller::odom_pub>("odom_param_pub", 1);//make a param publisher
     ros::Publisher  odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1);
 
+
+
+    dynamic_reconfigure::Client<dynamic_tutorial::tutorialConfig> dynamic_client("dynamic_client", dynCallBack);
+    dynamic_tutorial::tutorialConfig config;
+
+
+
+
     tf::TransformBroadcaster odom_broadcaster;
     ros::Time current_time, last_time;
     last_time = ros::Time::now();
 
 
+
+
     ros::Rate r(20);//以20Hz的速率发布里程信息，
-    while(n.ok())
+    while(ros::ok())
     {
         //param_pub init
         hero_chassis_controller::odom_pub odom_param_msg;
@@ -78,6 +96,8 @@ int main(int argc, char **argv)
 
         ros::spinOnce();
         current_time = ros::Time::now();
+
+
 
         //compute odometry in a typical way given the velocities of the robot
         double dt = (current_time - last_time).toSec();
@@ -117,9 +137,10 @@ int main(int argc, char **argv)
         //set the velocity
         odom.child_frame_id = "base_link";
         odom.twist.twist.linear.x = vx;
-        odom.twist.twist.linear.y = vy;
+        odom.twist.twist.linear.y =vy;
         odom.twist.twist.angular.z = vth;
 
+\
         //publish the message
         odom_pub.publish(odom);
         odom_param_pub.publish(odom_param_msg);

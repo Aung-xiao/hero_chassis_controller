@@ -25,12 +25,15 @@ find_package(catkin REQUIRED COMPONENTS
 
         message_generation
         geometry_msgs
+	    dynamic_reconfigure
 
         )
 
 add_message_files(FILES odom_pub.msg)
 generate_messages(DEPENDENCIES std_msgs)
-
+generate_dynamic_reconfigure_options(
+  cfg/tutorial.cfg
+)
 # Declare catkin package
 catkin_package(
         CATKIN_DEPENDS
@@ -62,8 +65,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
         src/joint_velocity_controller.cpp
-        #src/odom_tf_pub.cpp   //if you want to use odom_tf_pub,you should remove the #
-        src/cmd_vel_publisher.cpp
         )
 
 
@@ -78,8 +79,9 @@ add_executable (cmd_vel_publisher src/cmd_vel_publisher.cpp)
 target_link_libraries (cmd_vel_publisher ${catkin_LIBRARIES})
 add_dependencies(cmd_vel_publisher ${PROJECT_NAME}_generate_messages_cpp)
 
-
-
+add_executable(dynamic_tutorial_node src/dynamic_tutorial.cpp)
+add_dependencies(dynamic_tutorial_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(dynamic_tutorial_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
