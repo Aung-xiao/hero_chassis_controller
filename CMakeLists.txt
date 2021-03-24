@@ -89,10 +89,10 @@ target_link_libraries(dynamic_tutorial_node ${catkin_LIBRARIES})
 #############
 
 #new!!
-#catkin_install_python(PROGRAMS
-#   script/teleop_twist_keyboard.py
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-#)
+catkin_install_python(PROGRAMS
+   script/teleop_twist_keyboard.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 
 # Install headers
