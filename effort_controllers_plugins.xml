@@ -1,4 +1,4 @@
-<library path="lib/libeffort_controllers">
+<library path="lib/lib effort_controllers">
 
   <class name="effort_controllers/JointVelocityController" type="effort_controllers::JointVelocityController" base_class_type="controller_interface::ControllerBase">
     <description>

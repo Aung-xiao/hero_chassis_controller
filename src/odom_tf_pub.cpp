@@ -9,6 +9,9 @@
 #include <dynamic_tutorial/tutorialConfig.h>
 #include <dynamic_reconfigure/client.h>
 
+
+
+
 double x = 0.0;
 double y = 0.0;
 double th = 0.0;
@@ -23,8 +26,8 @@ double frv=0;
 double blv=0;
 double brv=0;
 
-double wheel_track=0.5;
-double wheel_base=0.475;
+double wheel_track;
+double wheel_base;
 
 
 void fl_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
@@ -51,8 +54,8 @@ void messageCallback(const hero_chassis_controller::odom_pub::ConstPtr& msg)
 }
 void dynCallBack(const dynamic_tutorial::tutorialConfig &config)
 {
-    wheel_base=config.wheel_base;
-    wheel_track=config.wheel_track;
+//    wheel_base=config.wheel_base;
+//    wheel_track=config.wheel_track;
     ROS_INFO("vx=%f",config.wheel_track);
 };
 
@@ -60,6 +63,9 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "odom_pub");
     ros::NodeHandle n;
+    ROS_INFO("Spinning node");
+
+
     ros::Subscriber front_left_velocity_controller_sub= n.subscribe<std_msgs::Float64>("/controller/front_left_velocity_controller/command", 1, fl_velocitysubscriber);
     ros::Subscriber front_right_velocity_controller_sub= n.subscribe<std_msgs::Float64>("/controller/front_right_velocity_controller/command", 1, fr_velocitysubscriber);
     ros::Subscriber back_left_velocity_controller_sub= n.subscribe<std_msgs::Float64>("/controller/back_left_velocity_controller/command", 1, bl_velocitysubscriber);
@@ -69,8 +75,8 @@ int main(int argc, char **argv)
     ros::Publisher  odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1);
 
 
-
-    dynamic_reconfigure::Client<dynamic_tutorial::tutorialConfig> dynamic_client("dynamic_client", dynCallBack);
+//    CallBack tmpdata;
+    dynamic_reconfigure::Client<dynamic_tutorial::tutorialConfig> dynamic_client("dynamic_tutorial_node", dynCallBack);
     dynamic_tutorial::tutorialConfig config;
 
 
@@ -140,13 +146,19 @@ int main(int argc, char **argv)
         odom.twist.twist.linear.y =vy;
         odom.twist.twist.angular.z = vth;
 
-\
+        dynamic_tutorial::tutorialConfig dynamic_client;
+        dynamic_client.wheel_track=0.475;
+        dynamic_client.wheel_base=0.5;
+        wheel_base=dynamic_client.wheel_base;
+        wheel_track=dynamic_client.wheel_track;
         //publish the message
         odom_pub.publish(odom);
         odom_param_pub.publish(odom_param_msg);
         last_time = current_time;
 
+        ros::spinOnce();
         r.sleep();
     }
+    ROS_INFO("Spinning node shutdown...");
     // return 0;
 }

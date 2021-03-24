@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/control_toolbox" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/teleop_twist_keyboard" vcs="Git" />
   </component>
 </project>

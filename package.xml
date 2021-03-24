@@ -11,6 +11,10 @@
   <author>PeiyuanSu</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+#new!!!
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+
 
   <depend>control_toolbox</depend>
   <depend>controller_interface</depend>

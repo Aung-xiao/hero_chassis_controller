@@ -83,9 +83,17 @@ add_executable(dynamic_tutorial_node src/dynamic_tutorial.cpp)
 add_dependencies(dynamic_tutorial_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(dynamic_tutorial_node ${catkin_LIBRARIES})
 
+
 #############
 ## Install ##
 #############
+
+#new!!
+#catkin_install_python(PROGRAMS
+#   script/teleop_twist_keyboard.py
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
+
 
 # Install headers
 install(DIRECTORY include/${PROJECT_NAME}/
