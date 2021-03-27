@@ -4,7 +4,7 @@
 
 This is the research result of DynamicX team member PiyuanSu.
 
-**Keywords:** RoboMaster, ROS, ros_control,PID
+**Keywords:** RoboMaster, ROS, ros_control,PID,Odom
 
 
 ### License
@@ -51,10 +51,24 @@ using
 ## Usage
 
 
-Run the controller with:
+Run the description and controller with:
 
 	roslaunch hero_chassis_coroller effort_velocity_controller.launch
+Run the dynamic_tutorial to modify wheel_track and wheel_base with:
 
+    rosrun hero_chassis_coroller dynamic_tutorial_node
+
+Run the cmd_vel_controller with:
+
+    rosrun hero_chassis_controller cmd_vel_pub
+    rosrun hero_chassis_controller cmd_vel_sub
+Run the odom with:
+
+    rosrun hero_chassis_controller odom_tf_pub
+Run the teleop_twist_keyboard with:
+
+    rosrun hero_chassis_controller cmd_vel_pub
+    rosrun hero_chassis_controller teleop_twist_keyboard.py
 ## Config files
 
 Config file config
@@ -65,7 +79,7 @@ Config file config
 
 ## Launch files
 
-* **fort_velocity_controller.launch:** Hero chassis  simulation and velocity controller
+* **effort_velocity_controller.launch:** Hero chassis  simulation and velocity controller
 
 ## Bugs & Feature Requests
 

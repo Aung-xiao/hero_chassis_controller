@@ -24,7 +24,7 @@ void callback(const geometry_msgs::Twist &cmd_vel)
 //    front_right_joint_.setCommand(front_right_command_);
 //    back_left_joint_.setCommand(back_left_command_ );
 //    back_right_joint_.setCommand(back_right_command_);
-
+//  This function cam not work properly
 }
 void dynCallBack(const dynamic_tutorial::tutorialConfig &config)
 {
@@ -37,12 +37,15 @@ int main(int argc, char** argv)
     ros::NodeHandle n;
     ros::Subscriber sub = n.subscribe("cmd_vel", 1000, callback);
     dynamic_reconfigure::Client<dynamic_tutorial::tutorialConfig> dynamic_client("dynamic_tutorial_node", dynCallBack);
-    dynamic_tutorial::tutorialConfig config;
+
+
     dynamic_tutorial::tutorialConfig cmd_dynamic_client;
     cmd_dynamic_client.wheel_track=0.500;
     cmd_dynamic_client.wheel_base=0.475;
     base=cmd_dynamic_client.wheel_base;
     track=cmd_dynamic_client.wheel_track;
+
+
     ros::spin();
     return 1;
 }

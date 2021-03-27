@@ -21,6 +21,7 @@ int main(int argc, char** argv)
     {
         geometry_msgs::Twist car_cmd_vel;
         command_pub.publish(car_cmd_vel);
+
         ros::spinOnce();
         loop_rate.sleep();
     }

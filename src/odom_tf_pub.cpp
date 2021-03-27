@@ -5,22 +5,19 @@
 #include <effort_controllers/joint_velocity_controller.h>
 #include <ros/console.h>
 #include <unistd.h>
-
 #include <dynamic_tutorial/tutorialConfig.h>
 #include <dynamic_reconfigure/client.h>
 
-
-
-
+//odom
 double x = 0.0;
 double y = 0.0;
 double th = 0.0;
-//默认机器人的起始位置是odom参考系下的0点
+
 double vx = 0;
 double vy = 0;
 double vth = 0;
 
-//odom_param
+//velocity
 double v1=0;
 double v2=0;
 double v3=0;
@@ -68,6 +65,8 @@ int main(int argc, char **argv)
     ros::Subscriber front_right_velocity_controller_sub= n.subscribe<std_msgs::Float64>("/controller/front_right_velocity_controller/command", 1, fr_velocitysubscriber);
     ros::Subscriber back_left_velocity_controller_sub= n.subscribe<std_msgs::Float64>("/controller/back_left_velocity_controller/command", 1, bl_velocitysubscriber);
     ros::Subscriber back_right_velocity_controller_sub= n.subscribe<std_msgs::Float64>("/controller/back_right_velocity_controller/command", 1, br_velocitysubscriber);
+
+
     ros::Subscriber odom_param_sub = n.subscribe("odom_param_pub", 1, messageCallback);
     ros::Publisher  odom_param_pub = n.advertise<hero_chassis_controller::odom_pub>("odom_param_pub", 1);//make a param publisher
     ros::Publisher  odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1);
@@ -84,7 +83,7 @@ int main(int argc, char **argv)
 
 
 
-    ros::Rate r(20);//以20Hz的速率发布里程信息，
+    ros::Rate r(20);
     while(ros::ok())
     {
         //param_pub init
@@ -155,5 +154,4 @@ int main(int argc, char **argv)
         r.sleep();
     }
     ROS_INFO("Spinning node shutdown...");
-    // return 0;
 }
