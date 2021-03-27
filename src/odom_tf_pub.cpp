@@ -21,42 +21,40 @@ double vy = 0;
 double vth = 0;
 
 //odom_param
-double flv=0;
-double frv=0;
-double blv=0;
-double brv=0;
+double v1=0;
+double v2=0;
+double v3=0;
+double v4=0;
 
-double wheel_track;
-double wheel_base;
+double track;
+double base;
 
 
 void fl_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
 {
-    flv= msg->data;
+    v1= msg->data;
 }
 void bl_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
 {
-    blv= msg->data;
+    v4= msg->data;
 }
 void fr_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
 {
-    frv= msg->data;
+    v2= msg->data;
 }
 void br_velocitysubscriber (const std_msgs::Float64ConstPtr &msg)
 {
-    brv= msg->data;
+    v3= msg->data;
 }
 void messageCallback(const hero_chassis_controller::odom_pub::ConstPtr& msg)
 {
-    vx = wheel_track;
-    vy = double(msg->back_left_velocity);
-    vth =double(msg->front_right_velocity);
+    vx = 1/sqrt(2)*(v1-v2-v3+v4);
+    vy = 1/sqrt(2)*(v1+v2-v3-v4);
+    vth =2/sqrt(track*track+base*base)*(v1+v2+v3+v4);
 }
 void dynCallBack(const dynamic_tutorial::tutorialConfig &config)
 {
-//    wheel_base=config.wheel_base;
-//    wheel_track=config.wheel_track;
-    ROS_INFO("vx=%f",config.wheel_track);
+    ROS_INFO("wheel_track=%f;wheel_base=%f",track,base);
 };
 
 int main(int argc, char **argv)
@@ -75,11 +73,8 @@ int main(int argc, char **argv)
     ros::Publisher  odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1);
 
 
-//    CallBack tmpdata;
     dynamic_reconfigure::Client<dynamic_tutorial::tutorialConfig> dynamic_client("dynamic_tutorial_node", dynCallBack);
     dynamic_tutorial::tutorialConfig config;
-
-
 
 
     tf::TransformBroadcaster odom_broadcaster;
@@ -94,10 +89,10 @@ int main(int argc, char **argv)
     {
         //param_pub init
         hero_chassis_controller::odom_pub odom_param_msg;
-        odom_param_msg.front_left_velocity=flv;
-        odom_param_msg.front_right_velocity=frv;
-        odom_param_msg.back_left_velocity=blv;
-        odom_param_msg.back_right_velocity=brv;
+        odom_param_msg.front_left_velocity=v1;
+        odom_param_msg.front_right_velocity=v2;
+        odom_param_msg.back_left_velocity=v4;
+        odom_param_msg.back_right_velocity=v3;
 
 
         ros::spinOnce();
@@ -146,11 +141,11 @@ int main(int argc, char **argv)
         odom.twist.twist.linear.y =vy;
         odom.twist.twist.angular.z = vth;
 
-        dynamic_tutorial::tutorialConfig dynamic_client;
-        dynamic_client.wheel_track=0.475;
-        dynamic_client.wheel_base=0.5;
-        wheel_base=dynamic_client.wheel_base;
-        wheel_track=dynamic_client.wheel_track;
+        dynamic_tutorial::tutorialConfig odom_dynamic_client;
+        odom_dynamic_client.wheel_track=0.475;
+        odom_dynamic_client.wheel_base=0.5;
+        base=odom_dynamic_client.wheel_base;
+        track=odom_dynamic_client.wheel_track;
         //publish the message
         odom_pub.publish(odom);
         odom_param_pub.publish(odom_param_msg);

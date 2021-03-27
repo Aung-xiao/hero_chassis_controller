@@ -65,15 +65,12 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
         src/joint_velocity_controller.cpp
+#        src/cmd_vel_sub.cpp
         )
-
-
 
 add_executable (odom_tf_pub src/odom_tf_pub.cpp)
 target_link_libraries (odom_tf_pub ${catkin_LIBRARIES})
 add_dependencies(odom_tf_pub ${PROJECT_NAME}_generate_messages_cpp)
-
-
 
 add_executable (cmd_vel_publisher src/cmd_vel_publisher.cpp)
 target_link_libraries (cmd_vel_publisher ${catkin_LIBRARIES})
@@ -83,7 +80,8 @@ add_executable(dynamic_tutorial_node src/dynamic_tutorial.cpp)
 add_dependencies(dynamic_tutorial_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(dynamic_tutorial_node ${catkin_LIBRARIES})
 
-
+add_executable (cmd_vel_sub src/cmd_vel_sub.cpp)
+target_link_libraries (cmd_vel_sub ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############

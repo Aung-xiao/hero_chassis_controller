@@ -12,12 +12,6 @@
 #include <std_msgs/Float64.h>
 #include <ros/ros.h>
 
-#include <iostream>
-#include <geometry_msgs/Twist.h>
-#include <ros/ros.h>
-#include <ros/console.h>
-#include<unistd.h>
-
 #include "Odom/odom_tf_pub.h"
 
 
@@ -57,7 +51,7 @@ namespace effort_controllers
         void setCommandFR(const std_msgs::Float64ConstPtr& msg);
         void setCommandBL(const std_msgs::Float64ConstPtr& msg);
         void setCommandBR(const std_msgs::Float64ConstPtr& msg);
-        void getcmd(const geometry_msgs::TwistConstPtr& twist);
+//        void getcmd(const geometry_msgs::TwistConstPtr& twist);
 
     };
 

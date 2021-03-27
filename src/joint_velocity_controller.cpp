@@ -43,7 +43,6 @@ namespace effort_controllers {
         sub_command_ = n.subscribe<std_msgs::Float64>("/controller/front_right_velocity_controller/command", 1, &JointVelocityController::setCommandFR,this);
         sub_command_ = n.subscribe<std_msgs::Float64>("/controller/back_right_velocity_controller/command", 1, &JointVelocityController::setCommandBR,this);
         sub_command_ = n.subscribe<std_msgs::Float64>("/controller/back_left_velocity_controller/command", 1, &JointVelocityController::setCommandBL,this);
-        sub_command_ = n.subscribe("cmd_vel", 1, &JointVelocityController::getcmd,this);
         return true;
     }
 
@@ -54,8 +53,9 @@ namespace effort_controllers {
     void JointVelocityController::starting(const ros::Time &time) {
         front_left_command_ = 0.0;
         front_right_command_ = 0.0;
+        back_right_command_ = 0.0;
+        back_right_command_ = 0.0;
         pid_controller_.reset();
-        v1=0.0;
     }
     void JointVelocityController::update(const ros::Time &time, const ros::Duration &period){
         double error_fl = front_left_command_ - front_left_joint_.getVelocity();
@@ -71,10 +71,10 @@ namespace effort_controllers {
 
 
         //set by cmd_vel
-        front_left_joint_.setCommand(v1);
-        back_left_joint_.setCommand(v2);
-        front_right_joint_.setCommand(v3);
-        back_right_joint_.setCommand(v4);
+//        front_left_joint_.setCommand(v1);
+//        back_left_joint_.setCommand(v2);
+//        front_right_joint_.setCommand(v3);
+//        back_right_joint_.setCommand(v4);
 
 
         if (loop_count_ % 10 == 0) {
@@ -114,16 +114,16 @@ namespace effort_controllers {
         back_right_command_ = msg->data;
     }
 
-    void JointVelocityController::getcmd(const geometry_msgs::TwistConstPtr& twist)
-    {
-
-        v1=twist->linear.x;
-        v2=twist->linear.y;
-        v3=twist->angular.x;
-        v4=twist->linear.z;
-        ROS_INFO("I heard:[%f,%f,%f]",twist->linear.x,twist->linear.y,twist->linear.z);
-
-    }
+//    void JointVelocityController::getcmd(const geometry_msgs::TwistConstPtr& twist)
+//    {
+//
+//        v1=twist->linear.x;
+//        v2=twist->linear.y;
+//        v3=twist->angular.x;
+//        v4=twist->linear.z;
+//        ROS_INFO("I heard:[%f,%f,%f]",twist->linear.x,twist->linear.y,twist->linear.z);
+//
+//    }
 
 }//namespace
 

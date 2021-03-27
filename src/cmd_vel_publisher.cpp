@@ -4,12 +4,10 @@
 
 int main(int argc, char** argv)
 {
-
-    //publisher
     ros::init(argc, argv, "car_control");
     ros::NodeHandle n;
-    ros::Publisher command_pub = n.advertise<geometry_msgs::Twist>(  "cmd_vel", 1000);
-    ros::Rate loop_rate(10);
+    ros::Publisher command_pub = n.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
+    ros::Rate loop_rate(1);
     while(1)
     {
         if(command_pub.getNumSubscribers()>0)
@@ -22,12 +20,6 @@ int main(int argc, char** argv)
     while (ros::ok())
     {
         geometry_msgs::Twist car_cmd_vel;
-        car_cmd_vel.linear.x =100;
-        car_cmd_vel.linear.y =100;
-        car_cmd_vel.linear.z = 100;
-        car_cmd_vel.angular.x = 100;
-        car_cmd_vel.angular.y = 100;
-        car_cmd_vel.angular.z=100;
         command_pub.publish(car_cmd_vel);
         ros::spinOnce();
         loop_rate.sleep();

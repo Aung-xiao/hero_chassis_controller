@@ -22,7 +22,8 @@ controller:
         joint: back_right_wheel_joint
         pid: { p: 100.0, i: 0.01, d: 10.0, }
 
-
+    cmd_vel_controller:
+        type: cmd_vel_controller/CmdVelController
 
 
 
