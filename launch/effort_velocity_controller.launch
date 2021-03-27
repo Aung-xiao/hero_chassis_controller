@@ -16,7 +16,6 @@
                               controller/back_left_velocity_controller
                               controller/front_right_velocity_controller
                               controller/back_right_velocity_controller
-                              controller/cmd_vel_controller
                               "/>
 
 

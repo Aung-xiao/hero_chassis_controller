@@ -8,22 +8,20 @@ controller:
     front_left_velocity_controller:
         type: effort_controllers/JointVelocityController
         joint: front_left_wheel_joint
-        pid: {p: 100.0, i: 0.01, d: 10.0,}
+        pid: {p: 1.0, i: 0.01, d: 0.02}
     back_left_velocity_controller:
         type: effort_controllers/JointVelocityController
         joint: back_left_wheel_joint
-        pid: { p: 100.0, i: 0.01, d: 10.0, }
+        pid: {p: 1.0, i: 0.01, d: 0.02}
     front_right_velocity_controller:
         type: effort_controllers/JointVelocityController
         joint: front_right_wheel_joint
-        pid: { p: 100.0, i: 0.01, d: 10.0, }
+        pid: {p: 1.0, i: 0.01, d: 0.02}
     back_right_velocity_controller:
         type: effort_controllers/JointVelocityController
         joint: back_right_wheel_joint
-        pid: { p: 100.0, i: 0.01, d: 10.0, }
+        pid: {p: 1.0, i: 0.01, d: 0.02}
 
-    cmd_vel_controller:
-        type: cmd_vel_controller/CmdVelController
 
 
 

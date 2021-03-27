@@ -3,7 +3,7 @@
 
 namespace effort_controllers {
     JointVelocityController::JointVelocityController()
-            :front_left_command_(0),front_right_command_(0),back_right_command_(0), back_left_command_(0),  loop_count_(0),v1(0), v2(0),v3(0), v4(0){}
+            :v1(0),v2(0),v3(0), v4(0),  loop_count_(0){}
 
     JointVelocityController::~JointVelocityController() {
         sub_command_.shutdown();
@@ -51,36 +51,33 @@ namespace effort_controllers {
         pid_controller_.getGains(p, i, d, i_max, i_min, antiwindup);
     }
     void JointVelocityController::starting(const ros::Time &time) {
-        front_left_command_ = 0.0;
-        front_right_command_ = 0.0;
-        back_right_command_ = 0.0;
-        back_right_command_ = 0.0;
+        v1 = 0.0;
+        v2 = 0.0;
+        v3 = 0.0;
+        v4 = 0.0;
         pid_controller_.reset();
     }
     void JointVelocityController::update(const ros::Time &time, const ros::Duration &period){
-        double error_fl = front_left_command_ - front_left_joint_.getVelocity();
+        double error_fl = v1 - front_left_joint_.getVelocity();
         double commanded_effort_fl = pid_controller_.computeCommand(error_fl, period);
-        double error_fr = front_right_command_ - front_right_joint_.getVelocity();
+        double error_fr = v2 - front_right_joint_.getVelocity();
         double commanded_effort_fr = pid_controller_.computeCommand(error_fr, period);
+        double error_br = v3 - back_right_joint_.getVelocity();
+        double commanded_effort_br = pid_controller_.computeCommand(error_br, period);
+        double error_bl = v4 - back_left_joint_.getVelocity();
+        double commanded_effort_bl = pid_controller_.computeCommand(error_bl, period);
 
         //set by pid_controller
         front_left_joint_.setCommand(commanded_effort_fl);
         front_right_joint_.setCommand(commanded_effort_fr);
-        back_left_joint_.setCommand(back_left_command_ );
-        back_right_joint_.setCommand(back_right_command_);
-
-
-        //set by cmd_vel
-//        front_left_joint_.setCommand(v1);
-//        back_left_joint_.setCommand(v2);
-//        front_right_joint_.setCommand(v3);
-//        back_right_joint_.setCommand(v4);
+        back_left_joint_.setCommand(commanded_effort_bl);
+        back_right_joint_.setCommand(commanded_effort_br);
 
 
         if (loop_count_ % 10 == 0) {
             if (controller_state_publisher_ && controller_state_publisher_->trylock()){
                 controller_state_publisher_->msg_.header.stamp = time;
-                controller_state_publisher_->msg_.set_point = front_left_command_;
+                controller_state_publisher_->msg_.set_point = v1;
                 controller_state_publisher_->msg_.process_value = front_left_joint_.getVelocity();
                 controller_state_publisher_->msg_.error = error_fl;
                 controller_state_publisher_->msg_.time_step = period.toSec();
@@ -102,28 +99,17 @@ namespace effort_controllers {
 
     }
     void JointVelocityController::setCommandFL(const std_msgs::Float64ConstPtr &msg) {
-        front_left_command_ = msg->data;
+        v1 = msg->data;
     }
     void JointVelocityController::setCommandFR(const std_msgs::Float64ConstPtr &msg){
-        front_right_command_ = msg->data;
+        v2 = msg->data;
     }
     void JointVelocityController::setCommandBL(const std_msgs::Float64ConstPtr &msg){
-        back_left_command_ = msg->data;
+        v4 = msg->data;
     }
     void JointVelocityController::setCommandBR(const std_msgs::Float64ConstPtr &msg){
-        back_right_command_ = msg->data;
+        v3 = msg->data;
     }
-
-//    void JointVelocityController::getcmd(const geometry_msgs::TwistConstPtr& twist)
-//    {
-//
-//        v1=twist->linear.x;
-//        v2=twist->linear.y;
-//        v3=twist->angular.x;
-//        v4=twist->linear.z;
-//        ROS_INFO("I heard:[%f,%f,%f]",twist->linear.x,twist->linear.y,twist->linear.z);
-//
-//    }
 
 }//namespace
 

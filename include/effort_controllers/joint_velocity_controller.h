@@ -35,7 +35,7 @@ namespace effort_controllers
 
         void getGains(double &p, double &i, double &d, double &i_max, double &i_min, bool &antiwindup);
 
-        double front_left_command_,front_right_command_,back_right_command_,back_left_command_,v1,v2,v3,v4;
+        double v1,v2,v3,v4;
         hardware_interface::JointHandle front_left_joint_,back_left_joint_,front_right_joint_,back_right_joint_;
     private:
         int loop_count_;
@@ -51,8 +51,6 @@ namespace effort_controllers
         void setCommandFR(const std_msgs::Float64ConstPtr& msg);
         void setCommandBL(const std_msgs::Float64ConstPtr& msg);
         void setCommandBR(const std_msgs::Float64ConstPtr& msg);
-//        void getcmd(const geometry_msgs::TwistConstPtr& twist);
-
     };
 
 } // namespace
